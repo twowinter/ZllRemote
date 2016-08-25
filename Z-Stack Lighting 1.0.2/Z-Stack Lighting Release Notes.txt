@@ -1,0 +1,169 @@
+Texas Instruments, Inc.
+
+Z-Stack Lighting Release Notes
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+Version 1.0.2
+December 19, 2013
+
+
+Notices:
+ - Z-Stack Lighting 1.0.2 is based on the certified Texas Instruments Z-Stack
+   Core 2.6.1, which supports the ZigBee 2012 specification. See the "Z-Stack
+   Core Release Notes" for details. 
+
+ - Z-Stack Lighting 1.0.2 has passed certification testing for ZigBee Light
+   Link compliance for Control Bridge and Color Scene Controller. See the
+   "Z-Stack Lighting Developer's Guide" for details. This release provides
+   support for Texas Instruments' CC2530 ZigBee Light Link Development Kit -
+   please see http://www.ti.com/tool/cc2530zdk-zll for details.
+
+ - The library files in this release were built and tested with version 8.20.2
+   (8.20.2.41139) of the IAR EW8051 Embedded Workbench development tools and
+   may not work with other versions of the IAR tools.
+
+ - Z-Stack is built and tested with IAR's CLIB library, which provides a
+   light-weight "C" library which does not support Embedded C++. Use of DLIB
+   is not recommended since Z-Stack is not tested with that library.
+
+
+Changes:
+ - [5240] Added support for the new mass-market Color Remote Control that is
+   included in the Texas Instruments CC2530 ZigBee Light Link Development Kit.
+   Refer to http://www.ti.com/tool/cc2530zdk-zll for details.
+
+ - [5233] Added support for the new Control Bridge application that runs on
+   both CC2531 USB Dongle and the SmartRF05EB+CC2530EM platforms. The CC2531
+   USB Dongle can be used with the Texas Instruments CC2530 ZigBee Light Link
+   Development Kit. Refer to http://www.ti.com/tool/cc2531emk for details.
+
+ - [5066] Modified the SampleLight application to implement thermal shutdown
+   of the LEDs according to periodic sampling of the MCU internal temperature
+   sensor - see the new 'hw_thermal_ctrl.c' and 'hw_thermal_ctrl.h' files.
+
+ - [5049] Modified the sample application environment for easier use. All
+   device configurations have been combined into a single IAR workspace and
+   the file directory structure has been simplified.
+
+ - [4829] Removed several un-necessary features/settings in the sample apps,
+   including: (1) removed ZDNwkMgr task from the Sample Remote, (2) removed
+   "ZIGBEE_FREQ_AGILITY" from the preprocessor defined symbols, (3) replaced
+   "ZLL_TARGET_DEVICE_VERSION" with "ZLL_DEVICE_VERSION" in all zll_targets,
+   (4) removed all Basic Device Settings Attribute Set (LocationDescription,
+   PhysicalEnvironment, and DeviceEnabled), (5) removed "ZLL_TARGET_FLAGS"
+   and "ZLL_INITIATOR_FLAGS".
+
+
+Bug Fixes:
+ - [5426] Fixed a ZLight problem where it would only blink one time when it
+   received a ZCL Identify command, regardless of the identify time.
+
+ - [5417] Fixed a Remote problem, on Reset to Factory New, where it would
+   send a NWk Leave command with destination PAN ID of 0xFFFF and a source
+   address of 0xFFFE.
+
+ - [5367] Cleaned up a mistake with sample application simple descriptors:
+   remotes had "ZCL_CLUSTER_ID_GEN_BASIC", "ZCL_CLUSTER_ID_GEN_IDENTIFY",
+   "ZCL_CLUSTER_ID_GEN_GROUPS" and "ZCL_CLUSTER_ID_GEN_SCENES" in their
+   InClusterList, and Lights had them in their OutClustersList. This could
+   cause issues when binding those devices using service discovery.
+
+ - [5352] Fixed a compile error that occurred when the "ZCL_COLOR_CTRL" flag
+   was removed to build a ZLL Light as a level-only device.
+
+ - [5296] Corrected possible usage of uninitialized pointers in handling ZLL
+   Utility cluster commands in functions 'zclLL_ProcessInCmd_GetGrpIDsRsp()'
+   and 'zclLL_ProcessInCmd_GetEPListRsp()'.
+
+ - [5236] Fixed a problem where a device that completed a touch-link process
+   (became not factory new) could not successfully join a new network using
+   classical commissioning.
+
+ - [5229] Corrected a problem in 'zclColor_processColorLoop()' where the value
+   of "zclColor_StepEnhancedHue_256" was not calculated properly.
+
+ - [5206] Fixed a problem where a "stop move step" command was sent to a light
+   that was in the process of "move to color" did not stop the process.
+
+ - [5130] Fixed a scenario where a Remote was sending a "reset to factory new"
+   interPAN command, on the operational channel, immediately after a touchlink
+   session, instead of on the selected target's channel.
+
+ - [5103] Modified colorMode restore logic to check the stored "currentX" and
+   "currentY" values - if they are not zero, then enhanced hue and saturation
+   mode will be selected. [CCB 1683]
+
+ - [5101] Updated the "Move to Hue" and "enhanced Move to Hue" commands to
+   handle an unobtainable hue value - the light should return the default
+   response with state value of 0x87. [CCB 1574, 1651]
+
+ - [5100] Updated "On with Recall" command processing to ignore the command
+   if received twice. [CCB 1555]
+
+ - [5091] Improved performance when an orphaned end-device attempts multiple
+   touchlinks within a short period of time
+
+ - [5072] Fixed a problem where a ZLL-1.0 control bridge, using classical
+   commissioning, would only recognize TI devices as part of an HA network,
+   and not send them any enhanced ZLL ZCL commands.
+
+ - [5052] Fixed an error in 'zll_samplelight_data.c' where a Read Attribute
+   command for primary 2 intensity attribute (HA profile ID 0x0104, cluster
+   ID 0x0300, attribute ID 0x0017) responded with "Unsupported Attribute".
+
+ - [5030] Fixed a problem where all scenes in a group were not copied when
+   the ZLL enhanced scene command "CopyScene" was used with the mode set to
+   SCENE_COPY_MODE_ALL_BIT.
+
+ - [4998] Fixed a problem where 'zllSampleLight_SceneRecallCB()' only handled
+   scenes that were added with "EnhancedAddScene" (not "AddScene").
+
+ - [4990] Corrected a race-condition created when a touch-link was aborted
+   after an Identify Request was sent - this caused the channel to be reset
+   from the Identify target before the queued command was sent by the MAC.
+
+ - [4735] Fixed a problem in the SampleLight application where a scene's
+   transition time was not stored or recalled, using the min transition time
+   (zero) instead. Also fixed a bug in TransitionTime100ms field calculation.
+
+
+Memory Sizes:
+ - Actual usage of Flash and RAM memory is variable, of course, and dependent
+   on the specific application. Developers should adjust various parameters,
+   such as, program stack size and dynamic memory heap size to meet their
+   specific needs.
+
+ - The following table provides comparison of Flash and RAM sizes for certain
+   device configurations for the SampleBridge, SampleLight, and SampleRemote
+   applications provided with this release. Projects for these applications
+   are found in the installed ..\Projects\zstack\ZLL\ folders. In Z-Stack
+   sample applications, generic heap and stack settings are used which have
+   been selected to accommodate a wide range of applications. For ZLL sample
+   applications, the heap settings were: Router = 3Kb, EndDevice = 2Kb. See
+   the "Heap Memory Management" section in the "Z-Stack Developer's Guide"
+   for details on profiling heap memory usage.
+
+ - Memory sizes (Flash/RAM) are shown below for the three Lighting device
+   types on various MCU and RF platforms with default parameter settings:
+
+   CC2530EM on SmarfRF05EB
+   ========================
+   SampleBridge: EB-Router        224.8K / 7.6K
+   SampleLight:  EB-Router        221.8K / 7.6K
+   SampleRemote: EB-EndDevice     182.0K / 6.1K
+
+   Dongle, ZLight, & ZLLRC
+   ========================
+   SampleBridge: Dongle-Router    224.7K / 7.7K
+   SampleLight:  ZLight-Router    216.0K / 7.2K
+   SampleRemote: ZLLRC-EndDevice  174.5K / 5.6K
+
+
+Known Issues:
+ - Gradual transitions of color attributes values may result in an inaccurate
+   target value. Accuracy can be guaranteed by using immediate transitions.
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\SampleBridge.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\SampleLight.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\SampleRemote.ewp</path>
+  </project>
+  <batchBuild>
+    <batchDefinition>
+      <name>All</name>
+      <member>
+        <project>SampleLight</project>
+        <configuration>EB - Router</configuration>
+      </member>
+      <member>
+        <project>SampleLight</project>
+        <configuration>Zlight - Router</configuration>
+      </member>
+      <member>
+        <project>SampleRemote</project>
+        <configuration>ARC - EndDevice</configuration>
+      </member>
+      <member>
+        <project>SampleRemote</project>
+        <configuration>EB - EndDevice</configuration>
+      </member>
+      <member>
+        <project>SampleRemote</project>
+        <configuration>ZLLRC - EndDevice</configuration>
+      </member>
+      <member>
+        <project>SampleBridge</project>
+        <configuration>EB - Router</configuration>
+      </member>
+      <member>
+        <project>SampleBridge</project>
+        <configuration>Dongle - Router</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>
+
+
